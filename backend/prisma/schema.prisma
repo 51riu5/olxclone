@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  name          String
+  passwordHash  String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  listings      Listing[]
+  favorites     Favorite[]
+  sentMessages  Message[] @relation("SentMessages")
+  conversationsBuyer Conversation[] @relation("BuyerConversations")
+  conversationsSeller Conversation[] @relation("SellerConversations")
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String
+  slug      String    @unique
+  listings  Listing[]
+}
+
+model Listing {
+  id          Int        @id @default(autoincrement())
+  title       String
+  description String
+  price       Int
+  location    String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  sellerId    Int
+  seller      User       @relation(fields: [sellerId], references: [id])
+  categoryId  Int
+  category    Category   @relation(fields: [categoryId], references: [id])
+  images      Image[]
+  favorites   Favorite[]
+  conversations Conversation[]
+}
+
+model Image {
+  id        Int     @id @default(autoincrement())
+  url       String
+  listingId Int
+  listing   Listing @relation(fields: [listingId], references: [id])
+}
+
+model Favorite {
+  id        Int     @id @default(autoincrement())
+  userId    Int
+  listingId Int
+  user      User    @relation(fields: [userId], references: [id])
+  listing   Listing @relation(fields: [listingId], references: [id])
+
+  @@unique([userId, listingId])
+}
+
+model Conversation {
+  id         Int      @id @default(autoincrement())
+  listingId  Int
+  listing    Listing  @relation(fields: [listingId], references: [id])
+  buyerId    Int
+  buyer      User     @relation("BuyerConversations", fields: [buyerId], references: [id])
+  sellerId   Int
+  seller     User     @relation("SellerConversations", fields: [sellerId], references: [id])
+  createdAt  DateTime @default(now())
+  messages   Message[]
+
+  @@unique([listingId, buyerId, sellerId])
+}
+
+model Message {
+  id             Int          @id @default(autoincrement())
+  conversationId Int
+  conversation   Conversation  @relation(fields: [conversationId], references: [id])
+  senderId       Int
+  sender         User         @relation("SentMessages", fields: [senderId], references: [id])
+  body           String
+  createdAt      DateTime     @default(now())
+}
+
+
