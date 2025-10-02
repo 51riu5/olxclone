@@ -20,7 +20,9 @@ export default function ListingDetail() {
   return (
     <div>
       <h2>{data.title}</h2>
-      <Carousel images={data.images?.map((i: any) => i.url) || []} />
+      <div className="carousel">
+        <Carousel images={data.images?.map((i: any) => i.url) || []} />
+      </div>
       <div style={{ marginTop: 8 }}>Price: ₹ {data.price}</div>
       <div>Location: {data.location}</div>
       <p>{data.description}</p>

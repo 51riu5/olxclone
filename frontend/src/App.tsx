@@ -26,19 +26,20 @@ function Layout() {
   }
 
   return (
-    <div style={{ maxWidth: 1000, margin: '0 auto', padding: 16 }}>
-      <header style={{ display: 'flex', gap: 16, alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <Link to="/">OLX Clone</Link>
+    <div className="container">
+      <header className="header">
+        <div className="nav">
+          <Link to="/" style={{ fontWeight: 800 }}>OLX Clone</Link>
+          <span className="badge">beta</span>
           <Link to="/messages">Messages</Link>
         </div>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <div className="nav">
           {me ? (
             <>
-              <span>Hello, {me.name}</span>
+              <span style={{ color: 'var(--muted)' }}>Hi, {me.name}</span>
               <Link to="/favorites">Favorites</Link>
               <Link to="/my">My Ads</Link>
-              <Link to="/new">Post Ad</Link>
+              <Link to="/new"><button>Post Ad</button></Link>
               <button onClick={logout}>Logout</button>
             </>
           ) : (

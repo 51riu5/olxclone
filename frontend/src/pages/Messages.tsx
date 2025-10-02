@@ -34,23 +34,23 @@ export default function Messages() {
   }
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: 12 }}>
-      <div style={{ borderRight: '1px solid #eee' }}>
+    <div className="msg-layout">
+      <div className="msg-list">
         {convos.map(c => (
-          <div key={c.id} onClick={() => { setActive(c.id); params.set('active', String(c.id)); setParams(params, { replace: true }) }} style={{ padding: 8, cursor: 'pointer', background: active === c.id ? '#f7f7f7' : undefined }}>
+          <div key={c.id} onClick={() => { setActive(c.id); params.set('active', String(c.id)); setParams(params, { replace: true }) }} style={{ padding: 8, cursor: 'pointer', background: active === c.id ? 'rgba(32,201,151,.12)' : undefined }}>
             <div style={{ fontWeight: 600 }}>{c.listing.title}</div>
-            <div style={{ color: '#666', fontSize: 12 }}>{c.messages[0]?.body}</div>
+            <div style={{ color: 'var(--muted)', fontSize: 12 }}>{c.messages[0]?.body}</div>
           </div>
         ))}
       </div>
       <div>
-        <div style={{ height: 420, overflowY: 'auto', border: '1px solid #eee', padding: 8 }}>
+        <div className="msg-thread" style={{ display: 'flex', flexDirection: 'column' }}>
           {messages.map(m => (
-            <div key={m.id} style={{ margin: '8px 0' }}>{m.body}</div>
+            <div key={m.id} className={`bubble ${m.senderId ? (m.senderId === (window as any).meId ? 'me' : 'them') : 'them'}`}>{m.body}</div>
           ))}
         </div>
-        <form onSubmit={send} style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-          <input value={body} onChange={e => setBody(e.target.value)} placeholder="Type a message" />
+        <form onSubmit={send} className="actions" style={{ marginTop: 8 }}>
+          <input value={body} onChange={e => setBody(e.target.value)} placeholder="Type a message" style={{ flex: 1 }} />
           <button>Send</button>
         </form>
       </div>
